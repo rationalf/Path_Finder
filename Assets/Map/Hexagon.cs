@@ -4,7 +4,7 @@ public class HexagonalPrismGenerator : MonoBehaviour
 {
     public float radius = 1f; // Radius of the hexagon
     public float height = 2f; // Height of the hexagonal prism
-
+    public int index;
     void Start()
     {
         GenerateHexagonalPrism();
