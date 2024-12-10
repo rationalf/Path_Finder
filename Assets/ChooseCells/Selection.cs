@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class HexagonSelector : MonoBehaviour
 {
-    public static GameObject startHex; // Начальная точка
-    public static GameObject endHex;   // Конечная точка
-    private static bool isStartSelected = false;
-    public static bool isEndSelected = false;
-    public int counter = 0;
+    public static GameObject startHex;
+    public static GameObject endHex; 
+    private static bool isStartSelected;
+    private static bool isEndSelected;
     private Renderer hexRenderer;
 
     void Start()
@@ -17,23 +16,20 @@ public class HexagonSelector : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log(counter);
         if (!isStartSelected)
         {
-            
-            // Устанавливаем начальную точку
+            // Place starting point
             startHex = gameObject;
-            hexRenderer.material.color = Color.green; // Задаем цвет для начальной точки
+            hexRenderer.material.color = Color.green;
             isStartSelected = true;
-            Debug.Log($"Start hex selected: {startHex.GetComponent<HexagonalPrismGenerator>().index}");
             return;
         }
-        if (isStartSelected && endHex == null)
+        if (isStartSelected && !isEndSelected)
         {
-            // Устанавливаем конечную точку
+            // Place ending point
             endHex = gameObject;
-            hexRenderer.material.color = Color.red; // Задаем цвет для конечной точки
-            Debug.Log($"End hex selected: {endHex.GetComponent<HexagonalPrismGenerator>().index}");
+            hexRenderer.material.color = Color.green;
+            isEndSelected = true;
             endHex.GetComponentInParent<HexGrid>().isEndSelected = true;
         }
     }
