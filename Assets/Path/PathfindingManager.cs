@@ -118,10 +118,10 @@ public class PathfindingManager : MonoBehaviour
         while (openSet.Count > 0)
         {
             numIters += 1;
-            if (numIters > 10000)
+            if (numIters > 100000)
             {
                 // preventing infinite loops
-                Debug.Log("Inginite loop A*");
+                Debug.Log("Infinite loop A*");
                 break;
             }
 
@@ -229,10 +229,18 @@ public class PathfindingManager : MonoBehaviour
         }));
 
         priorityQueue.Add(start);
-
+        
+        var numIters = 0;
         // main loop go until all paths found
         while (priorityQueue.Count > 0)
         {
+            numIters += 1;
+            if (numIters > 100000)
+            {
+                // preventing infinite loops
+                Debug.Log("Infinite loop Dijkstra");
+                break;
+            }
             // take the cell with minimal distance from start cell
             var current = priorityQueue.Min;
             priorityQueue.Remove(current);
