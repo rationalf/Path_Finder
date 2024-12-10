@@ -32,11 +32,10 @@ public class PathfindingManager : MonoBehaviour
 
         // Find the initial path using A*
         aStarPath  = AStar(startHex, endHex);
-        
         //Visualize paths if possible
         if (aStarPath  != null)
         {
-            var shortenedPath = aStarPath.ToArray()[..Mathf.Min(dijkstraOffset, aStarPath.Count - 1)].ToList();
+            var shortenedPath = aStarPath.ToArray()[..Mathf.Min(dijkstraOffset, aStarPath.Count)].ToList();
             StartCoroutine(VisualizeAStar(shortenedPath, 0.5f, Color.magenta));
             Debug.Log("A* cost:"+PathCost(shortenedPath));
         }
@@ -67,10 +66,17 @@ public class PathfindingManager : MonoBehaviour
             if (renderer != null) renderer.material.color = color;
             yield return new WaitForSeconds(delay);
         }
-        // Apply Dijkstra after dijkstraOffset steps of A*, because its better
-        List<GameObject> dijkstra = Dijkstra(aStarPath [Mathf.Min(dijkstraOffset,aStarPath.Count-1)], endHex);
-        StartCoroutine(VisualizeDijkstra(dijkstra, 0.5f, Color.red));
-        Debug.Log("Dijkstra cost:"+PathCost(dijkstra));
+        // Apply Dijkstra after dijkstraOffset steps of A*
+        if (aStarPath.Count > 10)
+        {
+            List<GameObject> dijkstra = Dijkstra(aStarPath[dijkstraOffset-1], endHex);
+            StartCoroutine(VisualizeDijkstra(dijkstra.ToArray()[1..].ToList(), 0.5f, Color.red));
+            Debug.Log("Dijkstra cost:"+PathCost(dijkstra));
+        }
+        else
+        {
+            Debug.Log("No need for dijkstra");
+        }
     }
     private IEnumerator VisualizeDijkstra(List<GameObject> path, float delay, Color color)
     {
