@@ -72,7 +72,7 @@ public class GuardAI : MonoBehaviour
         {
             float height = hex.GetComponent<HexagonalPrismGenerator>().height1;
             Vector3 hexPosition = hex.transform.position;
-            path.Add(new Vector3(hexPosition.x, height + 11, hexPosition.z));
+            path.Add(new Vector3(hexPosition.x, height + 11.5f, hexPosition.z));
             Debug.Log($"➡️ Added hex at {hexPosition} to path");
         }
 
