@@ -6,6 +6,7 @@ public class HexagonalPrismGenerator : MonoBehaviour
     public float height = 2f;
     public int index;
     public Mesh mesh1;
+    public float height1;
     void Start()
     {
         GenerateHexagonalPrism();
@@ -66,7 +67,6 @@ public class HexagonalPrismGenerator : MonoBehaviour
         topTriangles.CopyTo(allTriangles, 0);
         bottomTriangles.CopyTo(allTriangles, topTriangles.Length);
         triangles.CopyTo(allTriangles, topTriangles.Length + bottomTriangles.Length);
-
         mesh.vertices = vertices;
         mesh.triangles = allTriangles;
 
@@ -74,5 +74,6 @@ public class HexagonalPrismGenerator : MonoBehaviour
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         Material defaultMaterial = new Material(Shader.Find("Standard"));
         GetComponent<MeshCollider>().sharedMesh = mesh;
+        GetComponent<MeshCollider>().convex = true;
     }
 }
