@@ -14,7 +14,7 @@ public class BoidManager : MonoBehaviour
         {
             Vector3 spawnPos = new Vector3(
                 transform.position.x + i,
-                30,  // Фиксируем высоту Y
+                30,
                 transform.position.z
             );
 
