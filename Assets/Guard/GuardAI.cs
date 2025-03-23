@@ -25,14 +25,12 @@ public class GuardAI : MonoBehaviour
 
         if (path == null || path.Count == 0) return;
 
-        // ✅ Двигаемся к следующему hex
         Vector3 targetPosition = path[currentWaypointIndex];
         float step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
 
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            // ⏭️ Переход к следующему hex по кругу
             currentWaypointIndex = (currentWaypointIndex + 1) % path.Count;
         }
     }
@@ -44,28 +42,20 @@ public class GuardAI : MonoBehaviour
         {
             TeleportToFirstHex();
         }
-        else
-        {
-            Debug.LogError("❌ No valid path found!");
-        }
     }
 
     void GeneratePath()
     {
         path = new List<Vector3>();
 
-        // 🔍 Находим граничные гексы по Voronoi-сегментам
         List<GameObject> boundaryHexes = GetBoundaryHexes();
 
-        Debug.Log($"🧐 Found {boundaryHexes.Count} boundary hexes.");
 
         if (boundaryHexes.Count == 0)
         {
-            Debug.LogError("❌ No boundary hexes found!");
             return;
         }
 
-        // 🌀 Упорядочиваем по часовой стрелке
         boundaryHexes = SortHexesClockwise(boundaryHexes);
 
         foreach (var hex in boundaryHexes)
@@ -73,10 +63,8 @@ public class GuardAI : MonoBehaviour
             float height = hex.GetComponent<HexagonalPrismGenerator>().height1;
             Vector3 hexPosition = hex.transform.position;
             path.Add(new Vector3(hexPosition.x, height + 11.5f, hexPosition.z));
-            Debug.Log($"➡️ Added hex at {hexPosition} to path");
         }
 
-        Debug.Log($"✅ Generated path with {path.Count} waypoints.");
     }
 
 
@@ -93,7 +81,6 @@ public class GuardAI : MonoBehaviour
             }
         }
 
-        Debug.Log($"✅ Found {boundaryHexes.Count} boundary hexes.");
         return boundaryHexes;
     }
 
@@ -106,18 +93,12 @@ public class GuardAI : MonoBehaviour
         {
             if (neighbor == null) 
             {
-                // 🌟 Считаем пустоту как отдельный регион
                 uniqueRegions.Add(Vector2.zero);
                 continue;
             }
 
             Vector2 closestSite = hexGrid.GetClosestSite(new Vector2(neighbor.transform.position.x, neighbor.transform.position.z));
             uniqueRegions.Add(closestSite);
-        }
-
-        if (uniqueRegions.Count > 1)
-        {
-            Debug.Log($"✅ Hex at {hex.transform.position} borders {uniqueRegions.Count} regions.");
         }
 
         return uniqueRegions.Count;
@@ -135,7 +116,7 @@ public class GuardAI : MonoBehaviour
             Vector2 neighborPosition = new Vector2(potentialNeighbor.transform.position.x, potentialNeighbor.transform.position.z);
             float distance = Vector2.Distance(hexPosition, neighborPosition);
 
-            if (distance < hexGrid.hexRadius * 1.8f) // ✅ Убрали Y, только X и Z
+            if (distance < hexGrid.hexRadius * 1.8f) 
             {
                 Vector2 hexRegion = hexGrid.GetClosestSite(hexPosition);
                 Vector2 neighborRegion = hexGrid.GetClosestSite(neighborPosition);
@@ -147,7 +128,6 @@ public class GuardAI : MonoBehaviour
             }
         }
 
-        Debug.Log($"🧭 {neighbors.Count} valid neighbors found for hex at {hexPosition}");
         return neighbors;
     }
 
@@ -172,7 +152,7 @@ public class GuardAI : MonoBehaviour
                 {
                     Vector2 dir = new Vector2(n.transform.position.x - current.transform.position.x,
                         n.transform.position.z - current.transform.position.z);
-                    return Mathf.Atan2(dir.y, dir.x); // ✅ Считаем угол только по XZ
+                    return Mathf.Atan2(dir.y, dir.x);
                 })
                 .ToList();
 
@@ -199,6 +179,5 @@ public class GuardAI : MonoBehaviour
 
         transform.position = path[0];
         currentWaypointIndex = 0;
-        Debug.Log($"🚀 Teleported to starting hex at: {path[0]}");
     }
 }
